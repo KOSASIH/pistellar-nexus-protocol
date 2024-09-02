@@ -1,0 +1,15 @@
+{
+  "pi_network": {
+    "mainnet": {
+      "api_url": "https://api.pi.network",
+      "chain_id": "pi-mainnet-1"
+    }
+  },
+  "pi_assets": [
+    {
+      "symbol": "PI",
+      "decimals": 8,
+      "description": "Pi Coin"
+    }
+  ]
+}
