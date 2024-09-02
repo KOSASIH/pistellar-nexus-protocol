@@ -1,0 +1,24 @@
+{
+  "stellar_network": {
+    "testnet": {
+      "horizon_url": "https://horizon-testnet.stellar.org",
+      "network_passphrase": "Test SDF Network ; September 2015"
+    },
+    "mainnet": {
+      "horizon_url": "https://horizon.stellar.org",
+      "network_passphrase": "Public Global Stellar Network ; September 2015"
+    }
+  },
+  "stellar_assets": [
+    {
+      "code": "USD",
+      "issuer": "GC2BKLYOOYPDEFJKLKY6FNNRQMGFLVHJKHQWLTRW",
+      "description": "US Dollar"
+    },
+    {
+      "code": "EUR",
+      "issuer": "GDSBCQO34HWPGUGQSP3QBFEXVTSRBIY4SXZJ543YHZN",
+      "description": "Euro"
+    }
+  ]
+}
