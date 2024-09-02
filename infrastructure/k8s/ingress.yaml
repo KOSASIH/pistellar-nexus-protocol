@@ -1,0 +1,13 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pistellar-nexus-core
+spec:
+  rules:
+  - host: pistellar-nexus-core.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: pistellar-nexus-core
+          servicePort: 80
