@@ -1,0 +1,15 @@
+# PiStellar Nexus Core Architecture
+
+The PiStellar Nexus Core architecture is designed to provide a scalable and secure platform for interoperability between the Stellar and Pi networks. The architecture consists of the following components:
+
+* **Stellar Protocol**: The Stellar protocol is responsible for interacting with the Stellar network.
+* **Pi Network**: The Pi network is responsible for interacting with the Pi network.
+* **Crypto Utilities**: The crypto utilities provide cryptographic functions for encrypting and decrypting data.
+* **Network Utilities**: The network utilities provide functions for sending and receiving data over the network.
+* **API Gateway**: The API gateway provides a unified interface for interacting with the PiStellar Nexus Core.
+
+The architecture is designed to be modular and scalable, allowing for easy maintenance and extension of the platform.
+
+## Component Interactions
+
+The following diagram illustrates the interactions between the components:
