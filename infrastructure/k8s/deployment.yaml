@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pistellar-nexus-core
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pistellar-nexus-core
+  template:
+    metadata:
+      labels:
+        app: pistellar-nexus-core
+    spec:
+      containers:
+      - name: pistellar-nexus-core
+        image: pistellar/nexus-core:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_URL
+          value: "postgres://user:password@host:port/dbname"
+        - name: STELLAR_NETWORK
+          value: "testnet"
+        - name: PI_NETWORK
+          value: "mainnet"
