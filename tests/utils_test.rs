@@ -1,35 +1,34 @@
-// Unit tests for the utility functions
+use scripts::utils;
 
-use super::utils::crypto::CryptoUtilsImpl;
-use super::utils::network::NetworkUtilsImpl;
+#[cfg(test)]
+mod utils_tests {
+    use super::*;
 
-#[test]
-fn test_encrypt_data() {
-    let crypto_utils = CryptoUtilsImpl::new();
-    let data = vec![1, 2, 3, 4, 5];
-    let encrypted_data = crypto_utils.encrypt_data(data);
-    assert_ne!(encrypted_data, data);
-}
+    #[test]
+    fn test_get_stellar_asset() {
+        let asset_code = "USD";
+        let asset_info = utils::get_stellar_asset(asset_code);
+        assert!(asset_info.contains("USD"));
+    }
 
-#[test]
-fn test_decrypt_data() {
-    let crypto_utils = CryptoUtilsImpl::new();
-    let data = vec![1, 2, 3, 4, 5];
-    let encrypted_data = crypto_utils.encrypt_data(data);
-    let decrypted_data = crypto_utils.decrypt_data(encrypted_data);
-    assert_eq!(decrypted_data, data);
-}
+    #[test]
+    fn test_get_pi_asset() {
+        let asset_symbol = "PI";
+        let asset_info = utils::get_pi_asset(asset_symbol);
+        assert!(asset_info.contains("PI"));
+    }
 
-#[test]
-fn test_send_data() {
-    let network_utils = NetworkUtilsImpl::new();
-    let data = vec![1, 2, 3, 4, 5];
-    network_utils.send_data(data).unwrap();
-}
+    #[test]
+    fn test_get_stellar_network() {
+        let network = "mainnet";
+        let network_info = utils::get_stellar_network(network);
+        assert!(network_info.contains("horizon.stellar.org"));
+    }
 
-#[test]
-fn test_receive_data() {
-    let network_utils = NetworkUtilsImpl::new();
-    let data = network_utils.receive_data();
-    assert_eq!(data, vec![]);
+    #[test]
+    fn test_get_pi_network() {
+        let network = "mainnet";
+        let network_info = utils::get_pi_network(network);
+        assert!(network_info.contains("api.pi.network"));
+    }
 }
