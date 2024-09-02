@@ -1,0 +1,13 @@
+# Default values for pistellar-nexus-core
+image:
+  repository: pistellar/nexus-core
+  tag: latest
+
+database:
+  url: "postgres://user:password@host:port/dbname"
+
+stellar:
+  network: testnet
+
+pi:
+  network: mainnet
