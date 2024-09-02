@@ -13,3 +13,31 @@ The architecture is designed to be modular and scalable, allowing for easy maint
 ## Component Interactions
 
 The following diagram illustrates the interactions between the components:
+
+```
+          +---------------+
+          |  API Gateway  |
+          +---------------+
+                  |
+                  |
+                  v
++---------------+       +---------------+
+|  Stellar     |       |  Pi Network    |
+|  Protocol    |       |                 |
++---------------+       +---------------+
+                  |
+                  |
+                  v
++---------------+       +---------------+
+| Crypto        |       | Network        |
+| Utilities     |       | Utilities      |
++---------------+       +---------------+
+```
+
+## Benefits
+
+The PiStellar Nexus Core architecture provides the following benefits:
+
+* **Scalability**: The modular design allows for easy scaling of individual components.
+* **Security**: The use of cryptographic functions provides secure data transmission and storage.
+* **Flexibility**: The API gateway provides a unified interface for interacting with the PiStellar Nexus Core.
