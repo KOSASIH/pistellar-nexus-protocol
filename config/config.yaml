@@ -1,0 +1,27 @@
+app:
+  name: PiStellar Nexus Core
+  version: 1.0.0
+  environment: development
+
+stellar:
+  protocol:
+    host: stellar.example.com
+    port: 8000
+    api_key: stellar_api_key
+
+pi:
+  network:
+    host: pi.example.com
+    port: 8080
+    api_key: pi_api_key
+
+crypto:
+  algorithm: AES-256-CBC
+  key: crypto_key
+
+network:
+  socket: localhost:8080
+
+logging:
+  level: DEBUG
+  output: console
