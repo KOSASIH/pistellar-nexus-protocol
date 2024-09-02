@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.image.repository }}-{{ .Values.image.tag }}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {{ .Values.image.repository }}-{{ .Values.image.tag }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.image.repository }}-{{ .Values.image.tag }}
+    spec:
+      containers:
+      - name: {{ .Values.image.repository }}-{{ .Values.image.tag }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_URL
+          value: {{ .Values.database.url }}
+        - name: STELLAR_NETWORK
+          value: {{ .Values.stellar.network }}
+        - name: PI_NETWORK
+          value: {{ .Values.pi.network }}
