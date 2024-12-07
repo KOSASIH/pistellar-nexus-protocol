@@ -1,0 +1,49 @@
+[package]
+name = "pi_coin"
+version = "0.1.0"
+edition = "2024"
+
+# Description of the package
+description = "Pi Coin: A stablecoin pegged to $314.159"
+license = "MIT"
+authors = ["KOSASIH"]
+
+[dependencies]
+# Substrate dependencies for blockchain development
+substrate = { version = "4.0.0", default-features = false }
+sp-runtime = { version = "4.0.0", default-features = false }
+sp-core = { version = "4.0.0", default-features = false }
+sp-std = { version = "4.0.0", default-features = false }
+
+# Cryptography
+sha2 = "0.9.8"
+rand = "0.8.5"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Web server for API
+actix-web = "4.0.0"
+
+# Testing framework
+tokio = { version = "1", features = ["full"] }
+
+[features]
+default = ["std"]
+std = [
+    "substrate/std",
+    "sp-runtime/std",
+    "sp-core/std",
+    "sp-std/std",
+    "serde/std",
+    "actix-web/std",
+    "tokio/std",
+]
+
+[profile.dev]
+opt-level = 0
+debug-assertions = true
+
+[profile.release]
+opt-level = 3
