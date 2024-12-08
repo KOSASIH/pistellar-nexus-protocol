@@ -1,66 +1,46 @@
-// smart_contract/contract.rs
-
-use serde::{Deserialize, Serialize};
 use ink_lang as ink;
 
 #[ink::contract]
 mod contract {
-    use super::*;
-
-    #[derive(Default, Serialize, Deserialize)]
-    pub struct Asset {
-        pub id: u32,
-        pub owner: AccountId,
-        pub value: u128,
-        pub metadata: String,
-    }
+    use ink_storage::collections::HashMap as StorageMap;
 
     #[ink(storage)]
-    pub struct SmartContract {
-        assets: ink_storage::collections::HashMap<u32, Asset>,
-        total_assets: u32,
+    pub struct MyContract {
+        owner: AccountId,
+        balances: StorageMap<AccountId, Balance>,
     }
 
-    impl SmartContract {
+    impl MyContract {
         #[ink(constructor)]
         pub fn new() -> Self {
+            let caller = Self::env().caller();
             Self {
-                assets: ink_storage::collections::HashMap::new(),
-                total_assets: 0,
+                owner: caller,
+                balances: StorageMap::new(),
             }
         }
 
         #[ink(message)]
-        pub fn create_asset(&mut self, value: u128, metadata: String) -> u32 {
-            self.total_assets += 1;
-            let asset = Asset {
-                id: self.total_assets,
-                owner: Self::env().caller(),
-                value,
-                metadata,
-            };
-            self.assets.insert(self.total_assets, asset);
-            self.total_assets
-        }
-
-        #[ink(message)]
-        pub fn transfer_asset(&mut self, asset_id: u32, new_owner: AccountId) -> Result<(), &'static str> {
-            let asset = self.assets.get_mut(&asset_id).ok_or("Asset not found")?;
-            if asset.owner != Self::env().caller() {
-                return Err("Only the owner can transfer the asset");
+        pub fn transfer(&mut self, to: AccountId, value: Balance) -> Result<(), &'static str> {
+            let caller = self.env().caller();
+            let caller_balance = self.balances.get(&caller).unwrap_or(0);
+            if caller_balance < value {
+                return Err("Insufficient balance");
             }
-            asset.owner = new_owner;
+            self.balances.insert(caller, caller_balance - value);
+            let recipient_balance = self.balances.get(&to).unwrap_or(0);
+            self.balances.insert(to, recipient_balance + value);
             Ok(())
         }
 
         #[ink(message)]
-        pub fn get_asset(&self, asset_id: u32) -> Option<Asset> {
-            self.assets.get(&asset_id).cloned()
+        pub fn balance_of(&self, account: AccountId) -> Balance {
+            self.balances.get(&account).unwrap_or(0)
         }
 
         #[ink(message)]
-        pub fn get_total_assets(&self) -> u32 {
-            self.total_assets
+        pub fn owner(&self) -> AccountId {
+            self.owner
         }
     }
-}
+            }
