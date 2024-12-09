@@ -29,7 +29,7 @@ enum ComplianceRule {
 }
 
 impl PiCoin {
-    const PI_CONSTANT_VALUE: f64 = 3.14159;
+    const PI_CONSTANT_VALUE: f64 = 314159;
     const TARGET_PRICE: Decimal = Decimal::from_f64(314.159).unwrap();
 
     pub fn new(initial_supply: u64) -> Self {
