@@ -8,7 +8,7 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PiCoin {
     // Core Stablecoin Parameters
-    target_value: Decimal,     // $314.159
+    target_value: Decimal,     // Target value of $314,159
     current_value: Decimal,
     total_supply: u64,
     
@@ -29,15 +29,14 @@ enum ComplianceRule {
 }
 
 impl PiCoin {
-    const PI_CONSTANT_VALUE: f64 = 3.14159;
-    const TARGET_PRICE: Decimal = Decimal::from_f64(314.159).unwrap();
+    const TARGET_PRICE: Decimal = Decimal::from_f64(314159.0).unwrap(); // Set target price to $314,159
 
     pub fn new(initial_supply: u64) -> Self {
         Self {
             target_value: Self::TARGET_PRICE,
             current_value: Self::TARGET_PRICE,
             total_supply: initial_supply,
-            reserve_backing: Decimal::from_f64(initial_supply as f64 * 314.159).unwrap(),
+            reserve_backing: Decimal::from_f64(initial_supply as f64 * 314159.0).unwrap(),
             algorithmic_adjustment_factor: 1.0,
             governance_parameters: HashMap::new(),
             compliance_checks: vec![
@@ -49,9 +48,6 @@ impl PiCoin {
 
     // Advanced Stabilization Algorithm
     pub fn stabilize_value(&mut self) {
-        let current_timestamp = Utc::now().timestamp();
-        
-        // Dynamic value adjustment mechanism
         let market_deviation = self.calculate_market_deviation();
         
         if market_deviation > Decimal::from_f64(0.01).unwrap() {
@@ -64,7 +60,7 @@ impl PiCoin {
             self.current_value *= Decimal::from_f64(1.01).unwrap();
         }
 
-        self.validate_compliance_rules();
+        self.validate_compliance_rules().expect("Compliance check failed");
     }
 
     fn calculate_market_deviation(&self) -> Decimal {
@@ -76,7 +72,7 @@ impl PiCoin {
             match rule {
                 ComplianceRule::MinimumReserveRatio(min_ratio) => {
                     let current_ratio = self.reserve_backing.to_f64().unwrap() / 
-                                        (self.total_supply as f64 * 314.159);
+                                        (self.total_supply as f64 * 314159.0);
                     if current_ratio < *min_ratio {
                         return Err("Reserve ratio violation".to_string());
                     }
@@ -104,7 +100,7 @@ impl PiCoin {
         }
         
         self.total_supply += amount;
-        self.reserve_backing += Decimal::from_f64(amount as f64 * 314.159).unwrap();
+        self.reserve_backing += Decimal::from_f64(amount as f64 * 314159.0).unwrap();
         
         Ok(())
     }
@@ -115,7 +111,7 @@ impl PiCoin {
         }
         
         self.total_supply -= amount;
-        self.reserve_backing -= Decimal::from_f64(amount as f64 * 314.159).unwrap();
+        self.reserve_backing -= Decimal::from_f64(amount as f64 * 314159.0).unwrap();
         
         Ok(())
     }
@@ -136,10 +132,11 @@ mod tests {
     #[test]
     fn test_stabilization_mechanism() {
         let mut pi_coin = PiCoin::new(100_000);
+        pi_coin.current_value *= Decimal::from_f64(1.02).unwrap(); // Simulate market deviation
         pi_coin.stabilize_value();
         
         // Verify stabilization logic
         assert!(pi_coin.current_value.abs_diff(PiCoin::TARGET_PRICE) < 
                 Decimal::from_f64(1.0).unwrap());
     }
-}
+            }
