@@ -18,6 +18,7 @@ class PiCoinStabilizationParameters:
     PRECISION_THRESHOLD: float = 0.00001
     QUANTUM_ENTROPY_THRESHOLD: float = 0.9999
     NEURAL_PREDICTION_CONFIDENCE: float = 0.95
+    SUPPLY: int = 100_000_000_000  # Total supply of Pi Coin
 
 class QuantumPiCoinStablecoin:
     def __init__(
@@ -28,6 +29,8 @@ class QuantumPiCoinStablecoin:
         self.blockchain = blockchain_provider
         self.quantum_entropy = quantum_entropy_source
         self.target_value = PiCoinStabilizationParameters.FIXED_PI_VALUE
+        self.symbol = "Pi"  # Symbol for Pi Coin
+        self.total_supply = PiCoinStabilizationParameters.SUPPLY  # Total supply
         
         # Advanced Stabilization Components
         self.neural_predictor = self._initialize_neural_network()
@@ -145,7 +148,7 @@ class QuantumPiCoinStablecoin:
     def generate_quantum_entropy(self) -> np.ndarray:
         """Quantum Entropy Generation"""
         logger.info("Generating quantum entropy...")
-        return self .quantum_entropy.generate_array(
+        return self.quantum_entropy.generate_array(
             size=(256,), 
             dtype=np.float64
         )
