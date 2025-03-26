@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import pennylane as qml
-from typing import Dict
+from typing import Dict, Any
 
 class QuantumRiskManagementSystem:
     def __init__(self):
@@ -16,17 +16,19 @@ class QuantumRiskManagementSystem:
         - Multi-Dimensional Risk Vectors
         """
         model = tf.keras.Sequential([
-            tf.keras.layers.Dense(512, activation='relu', input_shape=(128,)),
+            tf.keras.layers.InputLayer(input_shape=(128,)),
+            tf.keras.layers.Dense(1024, activation='relu'),
             tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.Dense(256, activation='swish'),
-            tf.keras.layers.Dense(128, activation='tanh'),
-            tf.keras.layers.Dense(64, activation='sigmoid'),
-            tf.keras.layers.Dense(32, activation='softmax')  # Output layer for risk classification
+            tf.keras.layers.Dense(512, activation='swish'),
+            tf.keras.layers.Dropout(0.3),  # Added dropout for regularization
+            tf.keras.layers.Dense(256, activation='tanh'),
+            tf.keras.layers.Dense(128, activation='sigmoid'),
+            tf.keras.layers.Dense(64, activation='softmax')  # Output layer for risk classification
         ])
         
         model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
-            loss='categorical_crossentropy',  # Changed to categorical for multi-class risk
+            optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),  # Lower learning rate for better convergence
+            loss='categorical_crossentropy',
             metrics=['accuracy']
         )
         
@@ -37,11 +39,19 @@ class QuantumRiskManagementSystem:
         Create a quantum uncertainty layer using Pennylane
         - Quantum circuits for uncertainty quantification
         """
-        # Placeholder for a quantum uncertainty layer
-        def quantum_uncertainty_layer(data):
-            # Implement a simple quantum circuit for uncertainty quantification
-            # This is a placeholder for actual quantum operations
-            return np.random.rand(data.shape[0], 1)  # Simulated uncertainty values
+        def quantum_uncertainty_layer(data: np.ndarray) -> np.ndarray:
+            # Implement a quantum circuit for uncertainty quantification
+            dev = qml.device("default.qubit", wires=4)
+
+            @qml.qnode(dev)
+            def circuit(params):
+                for i in range(4):
+                    qml.RX(params[i], wires=i)
+                return [qml.expval(qml.PauliZ(i)) for i in range(4)]
+
+            # Generate random parameters for the quantum circuit
+            params = np.random.rand(4)
+            return circuit(params)  # Return the uncertainty values from the quantum circuit
         
         return quantum_uncertainty_layer
 
@@ -49,18 +59,18 @@ class QuantumRiskManagementSystem:
         """
         Initialize a quantum circuit for advanced risk modeling
         """
-        # Define a quantum circuit using Pennylane
         dev = qml.device("default.qubit", wires=4)
 
         @qml.qnode(dev)
         def circuit(params):
             for i in range(4):
                 qml.RX(params[i], wires=i)
+                qml.CNOT(wires=[i, (i + 1) % 4])  # Added entanglement for complexity
             return [qml.expval(qml.PauliZ(i)) for i in range(4)]
 
         return circuit
 
-    def assess_quantum_risk(self, market_data: np.ndarray) -> Dict:
+    def assess_quantum_risk(self, market_data: np.ndarray) -> Dict[str, Any]:
         """
         Hyperdimensional Quantum Risk Assessment
         - Probabilistic Risk Modeling
