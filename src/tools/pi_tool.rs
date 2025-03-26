@@ -1,5 +1,3 @@
-// Pi tool implementation
-
 use std::sync::{Arc, Mutex};
 use std::error::Error;
 
@@ -69,4 +67,4 @@ impl PiTool for PiToolImpl {
 
         Ok(())
     }
-        }
+            }
