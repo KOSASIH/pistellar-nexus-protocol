@@ -10,19 +10,17 @@ from datetime import datetime, timedelta
 # Advanced Security and Cryptography Imports
 import jwt
 import bcrypt
-import cryptography
 from cryptography.fernet import Fernet
 from jose import jwe
 
 # Blockchain and Distributed Systems
 from web3 import Web3
-import web3
 from eth_account import Account
 
 # Machine Learning and AI
 import tensorflow as tf
 import numpy as np
-import scikit_learn as sk
+from sklearn.preprocessing import StandardScaler
 
 # Compliance and Regulatory
 import pytz
@@ -84,6 +82,7 @@ class GlobalFinancialIntegrationProtocol:
         self.w3 = Web3(Web3.HTTPProvider(os.getenv('ETHEREUM_NODE_URL', 'https://mainnet.infura.io/v3/YOUR-PROJECT-ID')))
         
         # AI/ML Model Initialization
+        self.scaler = StandardScaler()
         self._initialize_ml_models()
         
         # Logging Setup
@@ -94,9 +93,9 @@ class GlobalFinancialIntegrationProtocol:
         try:
             # TensorFlow Risk Assessment Model
             self.risk_model = tf.keras.Sequential([
-                tf.keras.layers.Dense(64, activation='relu', input_shape=(10,)),
-                tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.Dense(32, activation='relu'),
+                tf.keras.layers.Dense(128, activation='relu', input_shape=(10,)),
+                tf.keras.layers.Dropout(0.3),
+                tf.keras.layers.Dense(64, activation='relu'),
                 tf.keras.layers.Dense(1, activation='sigmoid')
             ])
             self.risk_model.compile(
@@ -104,6 +103,7 @@ class GlobalFinancialIntegrationProtocol:
                 loss='binary_crossentropy', 
                 metrics=['accuracy']
             )
+            self.logger.info("Machine Learning Model Initialized Successfully.")
         except Exception as e:
             self.logger.error(f"ML Model Initialization Failed: {e}")
     
@@ -145,14 +145,15 @@ class GlobalFinancialIntegrationProtocol:
             self.logger.error(f"Settlement Mechanism Error: {e}")
             raise
     
-    async def _assess_transaction_risk(self, transaction_data: Dict) -> float:
+ async def _assess_transaction_risk(self, transaction_data: Dict) -> float:
         """Advanced AI-powered Risk Assessment"""
         try:
             # Convert transaction data to model input
             risk_features = self._prepare_risk_features(transaction_data)
+            risk_features_scaled = self.scaler.fit_transform(risk_features)
             
             # Predict Risk
-            risk_score = self.risk_model.predict(risk_features)[0][0]
+            risk_score = self.risk_model.predict(risk_features_scaled)[0][0]
             return float(risk_score)
         except Exception as e:
             self.logger.warning(f"Risk Assessment Failed: {e}")
@@ -206,6 +207,7 @@ class GlobalFinancialIntegrationProtocol:
             )
             db.add(transaction_log)
             db.commit()
+            self.logger.info(f"Transaction logged successfully: {security_profile.transaction_id}")
         except Exception as e:
             db.rollback()
             self.logger.error(f"Transaction Logging Failed: {e}")
