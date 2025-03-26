@@ -1,5 +1,3 @@
-// src/stablecoin/pi_coin.rs
-
 use std::collections::HashMap;
 use rust_decimal::Decimal;
 use chrono::Utc;
@@ -29,19 +27,20 @@ enum ComplianceRule {
 }
 
 impl PiCoin {
-    const TARGET_PRICE: Decimal = Decimal::from_f64(314159.0).unwrap(); // Set target price to $314,159
+    const TARGET_PRICE: Decimal = Decimal::from_f64(314159.00).unwrap(); // Set target price to $314,159
+    const MAX_SUPPLY: u64 = 100_000_000_000; // Total supply of Pi Coin
 
     pub fn new(initial_supply: u64) -> Self {
         Self {
             target_value: Self::TARGET_PRICE,
             current_value: Self::TARGET_PRICE,
             total_supply: initial_supply,
-            reserve_backing: Decimal::from_f64(initial_supply as f64 * 314159.0).unwrap(),
+            reserve_backing: Decimal::from_f64(initial_supply as f64 * 314159.00).unwrap(),
             algorithmic_adjustment_factor: 1.0,
             governance_parameters: HashMap::new(),
             compliance_checks: vec![
                 ComplianceRule::MinimumReserveRatio(0.5),
-                ComplianceRule::MaximumSupplyLimit(1_000_000),
+                ComplianceRule::MaximumSupplyLimit(Self::MAX_SUPPLY),
             ],
         }
     }
@@ -72,7 +71,7 @@ impl PiCoin {
             match rule {
                 ComplianceRule::MinimumReserveRatio(min_ratio) => {
                     let current_ratio = self.reserve_backing.to_f64().unwrap() / 
-                                        (self.total_supply as f64 * 314159.0);
+                                        (self.total_supply as f64 * 314159.00);
                     if current_ratio < *min_ratio {
                         return Err("Reserve ratio violation".to_string());
                     }
@@ -95,12 +94,12 @@ impl PiCoin {
 
     // Economic expansion/contraction
     pub fn mint(&mut self, amount: u64) -> Result<(), String> {
-        if self.total_supply + amount > 1_000_000 {
+        if self.total_supply + amount > Self::MAX_SUPPLY {
             return Err("Mint would exceed maximum supply".to_string());
         }
         
         self.total_supply += amount;
-        self.reserve_backing += Decimal::from_f64(amount as f64 * 314159.0).unwrap();
+        self.reserve_backing += Decimal::from_f64(amount as f64 * 314159.00).unwrap();
         
         Ok(())
     }
@@ -111,7 +110,7 @@ impl PiCoin {
         }
         
         self.total_supply -= amount;
-        self.reserve_backing -= Decimal::from_f64(amount as f64 * 314159.0).unwrap();
+        self.reserve_backing -= Decimal::from_f64(amount as f64 * 314159.00).unwrap();
         
         Ok(())
     }
@@ -139,4 +138,40 @@ mod tests {
         assert!(pi_coin.current_value.abs_diff(PiCoin::TARGET_PRICE) < 
                 Decimal::from_f64(1.0).unwrap());
     }
-            }
+
+    #[test]
+    fn test_minting() {
+        let mut pi_coin = PiCoin::new(100_000);
+        let result = pi_coin.mint(50_000);
+        
+        assert!(result.is_ok());
+        assert_eq!(pi_coin.total_supply, 150_000);
+    }
+
+    #[test]
+    fn test_burning() {
+        let mut pi_coin = PiCoin::new(100_000);
+        let result = pi_coin.burn(50_000);
+        
+        assert!(result.is_ok());
+        assert_eq!(pi_coin.total_supply, 50_000);
+    }
+
+    #[test]
+    fn test_compliance_check() {
+        let mut pi_coin = PiCoin::new(100_000);
+        pi_coin.reserve_backing = Decimal::from_f64(10_000_000_000.0).unwrap(); // Set a high reserve
+        
+        let result = pi_coin.validate_compliance_rules();
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_exceeding_supply_limit() {
+        let mut pi_coin = PiCoin::new(PiCoin::MAX_SUPPLY);
+        let result = pi_coin.mint(1);
+        
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Mint would exceed maximum supply");
+    }
+        }
