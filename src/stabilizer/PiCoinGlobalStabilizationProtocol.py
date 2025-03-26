@@ -4,7 +4,7 @@ import random
 from datetime import datetime
 
 class PiCoinGlobalStabilizationProtocol:
-    TARGET_VALUE = 314.159  # Precise Pi-derived valuation
+    TARGET_VALUE = 314159.00  # Precise Pi-derived valuation in USD
 
     def __init__(self):
         self.global_financial_integrations = {
@@ -93,11 +93,12 @@ class PiCoinGlobalStabilizationProtocol:
         return hashlib.sha256(transaction_string.encode()).hexdigest()
 
 # Example usage
-protocol = PiCoinGlobalStabilizationProtocol()
-protocol.integrate_central_bank_partnership("Central Bank of Example")
-protocol.add_international_settlement_system("SWIFT")
-protocol.add_cross_border_payment_network("RippleNet")
-protocol.execute_stabilization_protocol()
+if __name__ == "__main__":
+    protocol = PiCoinGlobalStabilizationProtocol()
+    protocol.integrate_central_bank_partnership("Central Bank of Example")
+    protocol.add_international_settlement_system("SWIFT")
+    protocol.add_cross_border_payment_network("RippleNet")
+    protocol.execute_stabilization_protocol()
 
-# Record a transaction
-protocol.record_transaction("UserA", "UserB", 100.0)
+    # Record a transaction
+    protocol.record_transaction("User A", "User B", 100.0)
