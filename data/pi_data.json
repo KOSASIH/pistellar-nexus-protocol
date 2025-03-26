@@ -1,8 +1,12 @@
 {
   "pi_network": {
     "mainnet": {
-      "api_url": "https://api.pi.network",
+      "api_url": "https://api.pi.network",  // Mainnet API URL
       "chain_id": "pi-mainnet-1"
+    },
+    "testnet": {
+      "api_url": "https://api.testnet.pi.network",  // Testnet API URL
+      "chain_id": "pi-testnet-1"
     }
   },
   "pi_assets": [
@@ -10,6 +14,11 @@
       "symbol": "PI",
       "decimals": 8,
       "description": "Pi Coin"
+    },
+    {
+      "symbol": "PIB",
+      "decimals": 8,
+      "description": "Pi Blockchain Token"
     }
   ]
 }
