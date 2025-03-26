@@ -8,19 +8,19 @@
     "protocol": {
       "host": "stellar.example.com",
       "port": 8000,
-      "api_key": "stellar_api_key"
+      "api_key": "${STELLAR_API_KEY}"  // Use environment variable for sensitive data
     }
   },
   "pi": {
     "network": {
       "host": "pi.example.com",
       "port": 8080,
-      "api_key": "pi_api_key"
+      "api_key": "${PI_API_KEY}"  // Use environment variable for sensitive data
     }
   },
   "crypto": {
     "algorithm": "AES-256-CBC",
-    "key": "crypto_key"
+    "key": "${CRYPTO_KEY}"  // Use environment variable for sensitive data
   },
   "network": {
     "socket": "localhost:8080"
@@ -29,4 +29,4 @@
     "level": "DEBUG",
     "output": "console"
   }
-}
+  }
