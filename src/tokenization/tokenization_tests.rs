@@ -1,8 +1,6 @@
-// tokenization/tokenization_tests.rs
-
 #[cfg(test)]
 mod tests {
-    use super::tokenization::{TokenizationManager, Uuid};
+    use super::super::tokenization::{TokenizationManager, Uuid};
 
     #[test]
     fn test_create_asset() {
@@ -66,4 +64,25 @@ mod tests {
         let token = manager.get_token(Uuid::new_v4());
         assert!(token.is_none());
     }
-}
+
+    #[test]
+    fn test_create_token_with_zero_amount() {
+        let mut manager = TokenizationManager::new();
+        let asset_id = manager.create_asset("Gold".to_string(), 1500.0);
+        let result = manager.create_token(asset_id, "Alice".to_string(), 0.0);
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Token amount must be greater than zero.");
+    }
+
+    #[test]
+    fn test_transfer_token_to_same_owner() {
+        let mut manager = TokenizationManager::new();
+        let asset_id = manager.create_asset("Gold".to_string(), 1500.0);
+        let token_id = manager.create_token(asset_id, "Alice".to_string(), 1.0).unwrap();
+        
+        // Attempt to transfer token to the same owner
+        let transfer_result = manager.transfer_token(token_id, "Alice".to_string());
+        assert!(transfer_result.is_err());
+        assert_eq!(transfer_result.unwrap_err(), "New owner must be different from the current owner.");
+    }
+            }
