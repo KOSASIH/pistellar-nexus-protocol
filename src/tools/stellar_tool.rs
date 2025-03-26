@@ -19,6 +19,7 @@ pub struct StellarToolImpl {
 }
 
 impl StellarToolImpl {
+    /// Creates a new instance of StellarToolImpl
     pub fn new(stellar_protocol: Arc<Mutex<dyn StellarProtocol>>) -> Self {
         Self { stellar_protocol }
     }
@@ -35,11 +36,12 @@ impl StellarTool for StellarToolImpl {
             .map_err(|e| format!("Failed to lock protocol: {}", e))?;
         
         // Perform actual operations
-        protocol.connect()?;
-        protocol.send_data(data)?;
-        let _response = protocol.receive_data()?;  // Do something with response if needed
+        protocol.connect().map_err(|e| format!("Failed to connect: {}", e))?;
+        protocol.send_data(data.clone()).map_err(|e| format!("Failed to send data: {}", e))?;
         
-        println!("Stellar operation performed!");
+        let response = protocol.receive_data().map_err(|e| format!("Failed to receive data: {}", e))?;  // Handle response if needed
+        
+        println!("Stellar operation performed! Response: {:?}", response);
         Ok(())
     }
 }
@@ -49,15 +51,18 @@ struct MockStellarProtocol;
 
 impl StellarProtocol for MockStellarProtocol {
     fn connect(&self) -> Result<(), String> {
+        println!("Mock connection established.");
         Ok(())
     }
     
     fn send_data(&self, _data: Vec<u8>) -> Result<(), String> {
+        println!("Mock data sent.");
         Ok(())
     }
     
     fn receive_data(&self) -> Result<Vec<u8>, String> {
-        Ok(vec![])
+        println!("Mock data received.");
+        Ok(vec![1, 2, 3])  // Simulated response
     }
 }
 
@@ -65,9 +70,10 @@ impl StellarProtocol for MockStellarProtocol {
 fn main() {
     let protocol = Arc::new(Mutex::new(MockStellarProtocol));
     let tool = StellarToolImpl::new(protocol);
+    
     let result = tool.perform_stellar_operation(vec![1, 2, 3]);
     match result {
         Ok(()) => println!("Operation successful"),
         Err(e) => println!("Operation failed: {}", e),
     }
-        }
+            }
