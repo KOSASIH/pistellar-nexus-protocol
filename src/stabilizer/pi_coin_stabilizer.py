@@ -45,7 +45,7 @@ class PiCoinStabilizationStrategy:
     Advanced Pi Coin Stabilization Data Model
     """
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    target_value: Decimal = Decimal('314.159')
+    target_value: Decimal = Decimal('314159.00')  # Target value set to $314,159.00
     current_value: Decimal = Decimal('0')
     stabilization_timestamp: datetime = field(default_factory=datetime.utcnow)
     volatility_index: float = 0.0
@@ -58,7 +58,7 @@ class AdvancedPiCoinStabilizer:
     def __init__(
         self, 
         initial_supply: Decimal = Decimal('1000000'),
-        target_price: Decimal = Decimal('314.159')
+        target_price: Decimal = Decimal('314159.00')  # Target price set to $314,159.00
     ):
         # Core Stabilization Parameters
         self.initial_supply = initial_supply
